@@ -40,6 +40,28 @@ Write-Host "Option three selected"
 $loc = read-host "Please, write the location you want to check"
  Get-ChildItem -Path $loc -Recurse -ErrorAction SilentlyContinue| Sort-Object Length -Descending|Select-Object -first 1|ft Name,@{n='Length(KB)';e={$_.Length / 1KB -as [int]}},@{n='Location';e={$_.FullName}}
 }
+function four{
+Write-Host "Option four selected"
+$fpm=Get-CIMInstance Win32_OperatingSystem | Select -ExpandProperty FreePhysicalMemory
+$tpm=Get-CIMInstance Win32_OperatingSystem | Select -ExpandProperty TotalVisibleMemorySize
+$tsm=Get-CimInstance -Class Win32_PageFileUsage |select -ExpandProperty AllocatedBaseSize
+$usm=Get-CimInstance -Class Win32_PageFileUsage | Select -ExpandProperty CurrentUsage
+$ppm=($fpm/$tpm)*100
+$psm=($usm/$tsm)*100
+Write-Host "Free physical memory(KB): $fpm"
+Write-Host "Free physical memory (%): $ppm"
+Write-Host "Used pagging memory(MB): $usm"
+Write-Host "Used pagging memory (%): $psm"
+
+}
+
+function five{
+Write-Host "Option five selected"
+$active= Get-NetTCPConnection -state Established|measure
+$write=$active.Count
+Write-Host "Established connections: $write"
+Get-NetTCPConnection -state Established|ft
+}
 
 
 Write-Host "Por German Carvajal y Santiago del Campo"
